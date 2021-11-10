@@ -9,11 +9,14 @@ show_help(){
 
 if [[ $# -eq 0 || "$1" == "-h" ]]; then
     show_help
+    exit 0
 fi
 
 URL=$1
 SERVE_FLAG=$2
 
 if [ "$SERVE_FLAG" = "true" ]; then
-    python3 new.py --url=$URL --http_server
+    python3 pgr.py --url=$URL --http_server
+else
+    python3 pgr.py --url=$URL
 fi
