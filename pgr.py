@@ -24,17 +24,14 @@ parser.add_argument('-k', '--skip_tls', help='flag to skip SSL/TLS verification 
 args = parser.parse_args()
 
 out_path = args.path or '.'
-url = args.url
+url = args.url or 'http://localhost'
+serve_port = args.port or 8080
 http_server_flag = args.http_server
 skip_tls_flag = not args.skip_tls
 out_file = args.out
-serve_port = args.port
 ignore_status_code = args.ignore_status
 
-if serve_port and not http_server_flag:
-    print('Automatically launching server!')
 
-# Download file
 def download_remote(url):
     downloaded_content = None
     filename = None
@@ -67,7 +64,7 @@ def download_remote(url):
         downloaded_content = response.content
 
     except ConnectionError:
-        print(f'Could not open {URL}')
+        print(f'Connection Error: Could not open {url}!')
 
     except TooManyRedirects:
         print('Received too many redirects!')
@@ -101,7 +98,7 @@ def save_file(downloaded_content, filename):
         try:
             os.makedirs(os.path.join(os.curdir, out_path))
         except Exception as e:
-            print(e)
+            # print(e)
             print(f'Could not create output directory {out_path}')
             print('Saving file to /tmp instead')
             final_path = os.path.join('/tmp', filename)
@@ -111,7 +108,7 @@ def save_file(downloaded_content, filename):
             f.write(downloaded_content)
         print(f'Saved as {final_path}')
     except Exception as e:
-        print(e)
+        # print(e)
         print('Could not save file!')
 
     # return out_path
@@ -128,11 +125,12 @@ def serve_file(file_path, port):
     Handler = MyHttpRequestHandler
 
     try:
-        with socketserver.TCPServer(("", port or 8080), Handler) as s:
-            print("Serving files")
+        with socketserver.TCPServer(('', port or 8080), Handler) as s:
+            print(f'Serving file: {file_path} at http://localhost://{port}')
             s.serve_forever()
     except Exception as e:
-        print(e)
+        # print(e)
+        print(f'Can\'t listen to port {port}')
 
 
 def main():
