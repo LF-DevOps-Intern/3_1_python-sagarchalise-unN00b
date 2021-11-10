@@ -7,6 +7,7 @@ import os
 import uuid
 import socketserver
 import http.server
+import subprocess
 from requests.exceptions import HTTPError, ConnectionError, TooManyRedirects, Timeout
 
 parser = argparse.ArgumentParser(description='PyGetRemote 0.1b')
@@ -111,33 +112,40 @@ def save_file(downloaded_content, filename):
         # print(e)
         print('Could not save file!')
 
-    # return out_path
-    return final_path
+    # return final_path
+    return out_path
 
 
-def serve_file(file_path, port):
+def serve_dir(file_dir, port):
+    os.chdir(file_dir)
+    cmd = f'python3 -m http.server {port}'
+    cmd_list = list(cmd.split())
+    subprocess.run(cmd_list)
 
-    class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
-        def do_GET(self):
-            self.path = file_path
-            return http.server.SimpleHTTPRequestHandler.do_GET(self)
 
-    Handler = MyHttpRequestHandler
+# def serve_file(file_path, port):
 
-    try:
-        with socketserver.TCPServer(('', port or 8080), Handler) as s:
-            print(f'Serving file: {file_path} at http://localhost://{port}')
-            s.serve_forever()
-    except Exception as e:
-        # print(e)
-        print(f'Can\'t listen to port {port}')
+#     class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
+#         def do_GET(self):
+#             self.path = file_path
+#             return http.server.SimpleHTTPRequestHandler.do_GET(self)
+
+#     Handler = MyHttpRequestHandler
+
+#     try:
+#         with socketserver.TCPServer(('', port or 8080), Handler) as s:
+#             print(f'Serving file: {file_path} at http://localhost://{port}')
+#             s.serve_forever()
+#     except Exception as e:
+#         # print(e)
+#         print(f'Can\'t listen to port {port}')
 
 
 def main():
     try:
         serve_directory = save_file(*download_remote(url))
         if http_server_flag:
-            serve_file(serve_directory, serve_port)
+            serve_dir(serve_directory, serve_port)
 
     except Exception as e:
         print(e)
