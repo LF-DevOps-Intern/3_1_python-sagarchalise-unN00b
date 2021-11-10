@@ -123,6 +123,24 @@ def serve_dir(file_dir, port):
     subprocess.run(cmd_list)
 
 
+# def serve_file(file_path, port):
+
+#     class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
+#         def do_GET(self):
+#             self.path = file_path
+#             return http.server.SimpleHTTPRequestHandler.do_GET(self)
+
+#     Handler = MyHttpRequestHandler
+
+#     try:
+#         with socketserver.TCPServer(('', port or 8080), Handler) as s:
+#             print(f'Serving file: {file_path} at http://localhost://{port}')
+#             s.serve_forever()
+#     except Exception as e:
+#         # print(e)
+#         print(f'Can\'t listen to port {port}')
+
+
 def main():
     try:
         serve_directory = save_file(*download_remote(url))
