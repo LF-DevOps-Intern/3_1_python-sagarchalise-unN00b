@@ -40,9 +40,9 @@ def download_remote(url):
     # Get filename by parsing url
     filename = url.split('/')[-1] or 'index.html'
 
-    # Send request to server
+    # Request file to server
     try:
-        response = requests.get(url, verify=(skip_tls_flag), timeout=5)
+        response = requests.get(url, verify=skip_tls_flag, timeout=5)
         response_status = str(response.status_code)[0]
 
         # Check status code
@@ -74,10 +74,9 @@ def download_remote(url):
         print('Connection timed out!')
 
     except HTTPError as http_error:
-        print(f'Unhandled HTTP Error: {http_error}')
+        print(f'Unhandled HTTP Error: {http_error}!')
 
     except Exception as e:
-        print(e)
         print('Unhandled exception occured while fetching the remote content!')
 
     if not downloaded_content:
@@ -99,7 +98,6 @@ def save_file(downloaded_content, filename):
         try:
             os.makedirs(os.path.join(os.curdir, out_path))
         except Exception as e:
-            # print(e)
             print(f'Could not create output directory {out_path}')
             print('Saving file to /tmp instead')
             final_path = os.path.join('/tmp', filename)
@@ -109,7 +107,6 @@ def save_file(downloaded_content, filename):
             f.write(downloaded_content)
         print(f'Saved as {final_path}')
     except Exception as e:
-        # print(e)
         print('Could not save file!')
 
     # return final_path
@@ -121,24 +118,6 @@ def serve_dir(file_dir, port):
     cmd = f'python3 -m http.server {port}'
     cmd_list = list(cmd.split())
     subprocess.run(cmd_list)
-
-
-# def serve_file(file_path, port):
-
-#     class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
-#         def do_GET(self):
-#             self.path = file_path
-#             return http.server.SimpleHTTPRequestHandler.do_GET(self)
-
-#     Handler = MyHttpRequestHandler
-
-#     try:
-#         with socketserver.TCPServer(('', port or 8080), Handler) as s:
-#             print(f'Serving file: {file_path} at http://localhost://{port}')
-#             s.serve_forever()
-#     except Exception as e:
-#         # print(e)
-#         print(f'Can\'t listen to port {port}')
 
 
 def main():
