@@ -15,7 +15,7 @@ fi
 URL=$1
 SERVE_FLAG=$2
 
-if [ "$SERVE_FLAG" = "true" ]; then
+if [[ "$SERVE_FLAG" == "true" ]]; then
     python3 pgr.py --url=$URL --http_server
 else
     python3 pgr.py --url=$URL
