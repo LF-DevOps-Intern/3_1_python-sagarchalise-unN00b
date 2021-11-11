@@ -1,4 +1,4 @@
-### PythonGetRemote v0.1b
+### PyGetRemote v0.1b
 
 Simple file downloader and server using Python and Bash.
 
