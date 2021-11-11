@@ -13,7 +13,7 @@ activate_venv(){
     # Create directory and initialize virtualenv if it doesn't exist
     if [[ ! -d $ENVDIR ]]; then
         mkdir -p $ENVDIR
-        virtualenv $ENVDIR -p 3.6
+        virtualenv $ENVDIR -p 3
         new=1
     fi
 
